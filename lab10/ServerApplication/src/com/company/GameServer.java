@@ -20,8 +20,6 @@ public class GameServer {
                 new ClientThread(socket).run();
                 //if client write "stop", the thread closes
                 //and command "break" break the loop
-                break;
-                //and after socket will be closed from block "finally"
             }
         } catch (IOException e) {
             System.err.println("Ooops... " + e);
