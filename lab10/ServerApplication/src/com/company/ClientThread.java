@@ -5,10 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ClientThread {
     private Socket socket = null ;
-    public ClientThread (Socket socket) { this.socket = socket;}
+    public AtomicBoolean serverOn = new AtomicBoolean(true);
+    public ClientThread (Socket socket, AtomicBoolean serverOn) {
+        this.socket = socket; this.serverOn = serverOn;}
     public void run () {
         try {
             //get the request from the input stream: client → server
@@ -20,7 +23,7 @@ public class ClientThread {
             String request = in.readLine();
             String raspuns;
             //server will be stopped when receive the "stop" command
-            while(!request.equalsIgnoreCase("stop")){
+            while(!request.equalsIgnoreCase("stop") || !serverOn.get()){
                 //server read the request and send a message
                 System.out.println("Client send the request: " + request);
                 raspuns = "Server received the request: " + request;
@@ -34,6 +37,8 @@ public class ClientThread {
             System.out.println(raspuns);
             out.println(raspuns);
             out.flush();
+            serverOn.set(false);
+            System.out.println("Hai sa vedem si valoarea in copil" + serverOn.get());
             //the socket will close the communication with the client
         } catch (IOException e) {
             System.err.println("Communication error... " + e);
