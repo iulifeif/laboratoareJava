@@ -10,8 +10,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class ClientThread {
     private Socket socket = null ;
     public AtomicBoolean serverOn = new AtomicBoolean(true);
+
     public ClientThread (Socket socket, AtomicBoolean serverOn) {
         this.socket = socket; this.serverOn = serverOn;}
+
     public void run () {
         try {
             //get the request from the input stream: client → server
@@ -38,7 +40,6 @@ public class ClientThread {
             out.println(raspuns);
             out.flush();
             serverOn.set(false);
-            System.out.println("Hai sa vedem si valoarea in copil" + serverOn.get());
             //the socket will close the communication with the client
         } catch (IOException e) {
             System.err.println("Communication error... " + e);
